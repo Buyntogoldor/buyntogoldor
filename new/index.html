@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цаг Агаарын Мэдээлэл</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="1065592048433-ql7kk3f7bdseqf93gg13n2id6b9kk45l.apps.googleusercontent.com"> <!-- Replace with your actual client ID -->
+    <style>
+        body {
+            background-image: url('https://example.com/moon-image.jpg');  /* Replace with your moon image URL */
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        .phone-container {
+            width: 300px;
+            height: 550px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .g-signin2 {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #user-info {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        #user-info img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+        }
+
+        .login-form input {
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+        .login-form button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="content">
+            <!-- Google Sign-In button -->
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+            <!-- User info (hidden initially) -->
+            <div id="user-info">
+                <h2 id="name"></h2>
+                <h3 id="email"></h3>
+                <img id="image" src="" alt="User Image">
+                <button onclick="signOut()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Google API Client
+        function startApp() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: '1065592048433-ql7kk3f7bdseqf93gg13n2id6b9kk45l.apps.googleusercontent.com'  // Replace with your actual Client ID
+                });
+            });
+        }
+
+        // Google Sign-In function
+        // Google Sign-In function
+function onSignIn(googleUser) {
+    const profile = googleUser.getBasicProfile();
+    document.getElementById('user-info').style.display = 'block';
+    document.getElementById('name').textContent = profile.getName();
+    document.getElementById('email').textContent = profile.getEmail();
+    document.getElementById('image').src = profile.getImageUrl();
+    document.querySelector('.g-signin2').style.display = 'none';
+
+    // Save user info to localStorage
+    localStorage.setItem('user_name', profile.getName());
+    localStorage.setItem('user_email', profile.getEmail());
+    localStorage.setItem('user_image', profile.getImageUrl());
+
+    // Redirect to weather0.html page
+    window.location.href = "weather0.html";  // This line handles the redirection to weather0.html
+}
+
+
+        // Sign-Out function
+        function signOut() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                // Clear user info
+                document.getElementById('user-info').style.display = 'none';
+                document.querySelector('.g-signin2').style.display = 'block';
+
+                // Remove user info from localStorage
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_email');
+                localStorage.removeItem('user_image');
+            });
+        }
+
+        // Display user info if already signed in
+        window.onload = function () {
+            const userName = localStorage.getItem('user_name');
+            const userEmail = localStorage.getItem('user_email');
+            const userImage = localStorage.getItem('user_image');
+
+            if (userName && userEmail && userImage) {
+                document.getElementById('user-info').style.display = 'block';
+                document.getElementById('name').textContent = 'Name: ' + userName;
+                document.getElementById('email').textContent = 'Email: ' + userEmail;
+                document.getElementById('image').src = userImage;
+                document.querySelector('.g-signin2').style.display = 'none';
+            }
+        }
+
+        startApp();  // Initialize Google API when the page loads
+    </script>
+
+</body>
+</html>
+s
